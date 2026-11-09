@@ -1,4 +1,7 @@
-// 1. Инициализация
+/* ==========================================================================
+   БЛОК 1: ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+   ========================================================================== */
+
 let appData = JSON.parse(localStorage.getItem('kanban_app_data_v3')) || {
     boards: [
         {
@@ -17,68 +20,189 @@ let appData = JSON.parse(localStorage.getItem('kanban_app_data_v3')) || {
     activeBoardId: 'work'
 };
 
-appData.boards.forEach(board => {
-    if(board.columns) board.columns.forEach(col => { delete col.width; });
-});
-
 let currentView = 'boards';
 
 function saveData() {
     localStorage.setItem('kanban_app_data_v3', JSON.stringify(appData));
 }
 
-// 2. Отрисовка
-function renderApp() {
-    renderTabs();
-    if (currentView === 'boards') {
-        renderBoards();
-        renderList(); 
+/* ==========================================================================
+   БЛОК 2: УПРАВЛЕНИЕ ТЕМОЙ (Светлая / Тёмная)
+   ========================================================================== */
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('kanban_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        updateThemeButtons('dark');
     } else {
-        renderList();
+        updateThemeButtons('light');
     }
 }
 
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('kanban_theme', isDark ? 'dark' : 'light');
+    updateThemeButtons(isDark ? 'dark' : 'light');
+}
+
+function updateThemeButtons(theme) {
+    const icon = theme === 'dark' ? '☀️' : '🌙';
+    const text = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
+    
+    // Обновляем мобильную кнопку
+    const btnMobile = document.getElementById('theme-btn-mobile');
+    if (btnMobile) btnMobile.innerHTML = `<span class="icon-emoji">${icon}</span> Тема`;
+    
+    // Обновляем элементы в новом десктопном выпадающем меню
+    const desktopIcon = document.getElementById('desktop-theme-icon');
+    const desktopText = document.getElementById('desktop-theme-text');
+    if (desktopIcon) desktopIcon.textContent = icon;
+    if (desktopText) desktopText.textContent = text;
+}
+
+/* ==========================================================================
+   БЛОК 3: МЕНЮ (Мобильное и Десктопное выпадающее)
+   ========================================================================== */
+
+// Мобильное меню (выезжающее)
+function toggleMobileMenu() {
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const drawer = document.getElementById('mobile-menu-drawer');
+    
+    overlay.classList.toggle('active');
+    drawer.classList.toggle('active');
+    
+    document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
+}
+
+// Десктопное выпадающее меню
+function toggleDesktopMenu() {
+    const dropdown = document.getElementById('desktop-dropdown');
+    const btn = document.getElementById('desktop-menu-btn');
+    
+    dropdown.classList.toggle('active');
+    btn.classList.toggle('active');
+}
+
+// Закрываем десктопное меню при клике в любом другом месте
+document.addEventListener('click', function(event) {
+    const container = document.querySelector('.desktop-menu-container');
+    const dropdown = document.getElementById('desktop-dropdown');
+    const btn = document.getElementById('desktop-menu-btn');
+    
+    if (container && !container.contains(event.target)) {
+        if (dropdown) dropdown.classList.remove('active');
+        if (btn) btn.classList.remove('active');
+    }
+});
+
+/* ==========================================================================
+   БЛОК 4: ГЛАВНАЯ ОТРИСОВКА (Рендеринг интерфейса)
+   ========================================================================== */
+
+function renderApp() {
+    renderTabs();          // Рисуем вкладки досок
+    renderMobileHeader();  // Обновляем шапку на телефоне
+    updateListButtons();   // Меняем текст кнопок "Список / Назад"
+
+    if (currentView === 'boards') {
+        renderBoards();    // Рисуем сами доски с колонками
+        renderList();      // Фоновое обновление списка
+    } else {
+        renderList();      // Если мы в режиме списка, рисуем только таблицу
+    }
+}
+
+// Обновляем текст кнопок "Список задач" в меню
+function updateListButtons() {
+    const text = currentView === 'boards' ? '📋 Список задач' : '📋 Вернуться к доске';
+    const btnMobile = document.getElementById('mobile-list-toggle-btn');
+    const btnDesktop = document.querySelector('#desktop-dropdown .dropdown-item:first-child'); // Первая кнопка в выпадающем меню
+    
+    if (btnMobile) btnMobile.innerHTML = text;
+    if (btnDesktop) btnDesktop.innerHTML = `<span class="icon">📋</span> ${currentView === 'boards' ? 'Список задач' : 'Вернуться к доске'}`;
+}
+
+// Рисуем вкладки досок
 function renderTabs() {
     const switcher = document.getElementById('board-switcher');
+    const drawerList = document.getElementById('drawer-boards-list');
+    
     const addBtn = switcher.querySelector('.add-board-btn');
     switcher.innerHTML = '';
+    drawerList.innerHTML = '';
 
     appData.boards.forEach(board => {
-        const tabWrapper = document.createElement('div');
-        tabWrapper.className = 'tab-wrapper';
-        
-        const btn = document.createElement('button');
-        btn.className = `switch-btn ${board.id === appData.activeBoardId && currentView === 'boards' ? 'active' : ''}`;
-        btn.innerHTML = `<span>${board.icon}</span> ${board.name}`;
-        btn.onclick = () => {
-            if(currentView === 'list') toggleListView(); 
-            switchBoard(board.id);
-        };
-
-        const tabActions = document.createElement('div');
-        tabActions.className = 'tab-actions';
-        
-        const editTabBtn = document.createElement('button');
-        editTabBtn.className = 'tab-action-btn';
-        editTabBtn.innerHTML = '✏️';
-        editTabBtn.onclick = (e) => { e.stopPropagation(); editBoard(board.id); };
-
-        const delTabBtn = document.createElement('button');
-        delTabBtn.className = 'tab-action-btn';
-        delTabBtn.innerHTML = '✕';
-        delTabBtn.onclick = (e) => { e.stopPropagation(); deleteBoard(board.id); };
-
-        tabActions.appendChild(editTabBtn);
-        if (appData.boards.length > 1) tabActions.appendChild(delTabBtn);
-
-        tabWrapper.appendChild(btn);
-        tabWrapper.appendChild(tabActions);
+        // Вкладка для ПК
+        const tabWrapper = createTabElement(board, false);
         switcher.appendChild(tabWrapper);
+
+        // Вкладка для мобильного меню
+        const drawerTab = createTabElement(board, true);
+        drawerList.appendChild(drawerTab);
     });
 
     switcher.appendChild(addBtn);
 }
 
+// Создание одной вкладки
+function createTabElement(board, isMobileMenu) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tab-wrapper';
+    
+    const btn = document.createElement('button');
+    btn.className = `switch-btn ${board.id === appData.activeBoardId && currentView === 'boards' ? 'active' : ''}`;
+    btn.innerHTML = `<span>${board.icon}</span> ${board.name}`;
+    
+    btn.onclick = () => {
+        if(currentView === 'list') toggleListView();
+        switchBoard(board.id);
+        if (isMobileMenu) toggleMobileMenu();
+    };
+
+    const actions = document.createElement('div');
+    actions.className = 'tab-actions';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'tab-action-btn';
+    editBtn.innerHTML = '✏️';
+    editBtn.onclick = (e) => { e.stopPropagation(); editBoard(board.id); };
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'tab-action-btn';
+    delBtn.innerHTML = '✕';
+    delBtn.onclick = (e) => { e.stopPropagation(); deleteBoard(board.id); };
+
+    actions.appendChild(editBtn);
+    if (appData.boards.length > 1) actions.appendChild(delBtn);
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(actions);
+    
+    return wrapper;
+}
+
+// Обновляем заголовок в мобильной шапке
+function renderMobileHeader() {
+    const iconEl = document.getElementById('mobile-board-icon');
+    const nameEl = document.getElementById('mobile-board-name');
+    if (!iconEl || !nameEl) return;
+
+    if (currentView === 'boards') {
+        const activeBoard = appData.boards.find(b => b.id === appData.activeBoardId);
+        if (activeBoard) {
+            iconEl.textContent = activeBoard.icon;
+            nameEl.textContent = activeBoard.name;
+        }
+    } else {
+        iconEl.textContent = '📋';
+        nameEl.textContent = 'СПИСОК ЗАДАЧ';
+    }
+}
+
+// Рисуем доски с колонками
 function renderBoards() {
     const container = document.getElementById('boards-container');
     container.innerHTML = '';
@@ -89,7 +213,6 @@ function renderBoards() {
         boardWrapper.id = `board-${board.id}`;
 
         let boardHTML = `<div class="board" id="grid-${board.id}">`;
-        
         board.columns.forEach(col => {
             const style = `--col-accent: ${col.accentColor}; background-color: ${col.bgColor};`;
             boardHTML += `
@@ -103,11 +226,10 @@ function renderBoards() {
                 </div>
             `;
         });
-        
         boardHTML += `</div>`;
+        
         boardWrapper.innerHTML = boardHTML;
         container.appendChild(boardWrapper);
-
         renderTasks(board.id);
     });
 
@@ -120,17 +242,15 @@ function renderBoards() {
     attachEnterListeners();
 }
 
+// Рисуем карточки внутри колонок
 function renderTasks(boardId) {
     const board = appData.boards.find(b => b.id === boardId);
     if (!board) return;
-
     board.columns.forEach(col => {
         const container = document.getElementById(`${boardId}-${col.id}`);
         if (!container) return;
         container.innerHTML = '';
-
         if (!board.tasks[col.id]) board.tasks[col.id] = [];
-
         board.tasks[col.id].forEach((task, index) => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -139,7 +259,6 @@ function renderTasks(boardId) {
             card.dataset.board = boardId;
             card.dataset.status = col.id;
             card.dataset.index = index;
-
             card.innerHTML = `
                 <div class="card-actions">
                     <button class="action-btn edit-btn" onclick="startEdit('${boardId}', '${col.id}', ${index}, 'board')" title="Редактировать">✏️</button>
@@ -147,7 +266,6 @@ function renderTasks(boardId) {
                 </div>
                 <div class="card-text">${escapeHtml(task.text)}</div>
             `;
-
             card.addEventListener('dragstart', handleDragStart);
             card.addEventListener('dragend', handleDragEnd);
             container.appendChild(card);
@@ -155,7 +273,32 @@ function renderTasks(boardId) {
     });
 }
 
-// 3. Отрисовка СПИСКА
+/* ==========================================================================
+   БЛОК 5: РЕЖИМ СПИСКА (Таблица)
+   ========================================================================== */
+
+function toggleListView() {
+    currentView = currentView === 'boards' ? 'list' : 'boards';
+    
+    const boardWrapper = document.getElementById('board-scroll-wrapper');
+    const listContainer = document.getElementById('list-view-container');
+    const headerArea = document.getElementById('board-header-area');
+
+    if (currentView === 'list') {
+        boardWrapper.style.display = 'none';
+        headerArea.style.display = 'none';
+        listContainer.classList.add('active');
+        renderMobileHeader();
+        renderList();
+    } else {
+        boardWrapper.style.display = 'block';
+        headerArea.style.display = 'flex';
+        listContainer.classList.remove('active');
+        renderApp();
+    }
+    updateListButtons();
+}
+
 function renderList() {
     const board = appData.boards.find(b => b.id === appData.activeBoardId);
     if (!board) return;
@@ -166,22 +309,12 @@ function renderList() {
 
     board.columns.forEach(col => {
         const tasks = board.tasks[col.id] || [];
-        
         tasks.forEach((task, index) => {
             const tr = document.createElement('tr');
-            tr.dataset.boardId = board.id;
-            tr.dataset.colId = col.id;
-            tr.dataset.taskIndex = index;
-
             const statusStyle = `background-color: ${col.bgColor}; color: ${col.accentColor}; border: 1px solid ${col.accentColor}50;`;
-
             tr.innerHTML = `
-                <td style="text-align: left;">
-                    <span class="badge-status" style="${statusStyle}">${col.name}</span>
-                </td>
-                <td style="text-align: left;">
-                    <div class="list-task-text" id="task-text-${board.id}-${col.id}-${index}">${escapeHtml(task.text)}</div>
-                </td>
+                <td style="text-align: left;"><span class="badge-status" style="${statusStyle}">${col.name}</span></td>
+                <td style="text-align: left;"><div class="list-task-text" id="task-text-${board.id}-${col.id}-${index}">${escapeHtml(task.text)}</div></td>
                 <td>
                     <div class="list-actions">
                         <button class="list-action-btn" onclick="startEdit('${board.id}', '${col.id}', ${index}, 'list')" title="Редактировать">✏️</button>
@@ -192,19 +325,45 @@ function renderList() {
             tbody.appendChild(tr);
         });
     });
-
     if (tbody.innerHTML === '') {
         tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 30px; color:#888;">На этой доске пока нет задач.</td></tr>`;
     }
 }
 
-// 4. Универсальное редактирование
+/* ==========================================================================
+   БЛОК 6: РАБОТА С ЗАДАЧАМИ
+   ========================================================================== */
+
+function addTask(boardId, status) {
+    const board = appData.boards.find(b => b.id === boardId);
+    if (!board) return;
+    const input = document.getElementById(`input-${boardId}-${status}`);
+    const text = input.value.trim();
+    if (text) {
+        if (!board.tasks[status]) board.tasks[status] = [];
+        board.tasks[status].push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 5), text: text });
+        input.value = '';
+        saveData();
+        renderTasks(boardId);
+        if (currentView === 'list') renderList();
+    }
+}
+
+function deleteTask(boardId, status, index) {
+    if(confirm('Удалить эту задачу?')) {
+        const board = appData.boards.find(b => b.id === boardId);
+        board.tasks[status].splice(index, 1);
+        saveData();
+        if (currentView === 'list') renderList();
+        else renderTasks(boardId);
+    }
+}
+
 function startEdit(boardId, status, index, source) {
     const board = appData.boards.find(b => b.id === boardId);
     const task = board.tasks[status][index];
     const col = board.columns.find(c => c.id === status);
     const colAccent = col ? col.accentColor : '#a3c8f0';
-
     let targetContainer;
 
     if (source === 'board') {
@@ -222,21 +381,15 @@ function startEdit(boardId, status, index, source) {
     const wrapper = document.createElement('div');
     wrapper.className = 'edit-wrapper';
     wrapper.style.setProperty('--col-accent', colAccent);
-
-    if (source === 'list') {
-        wrapper.style.boxShadow = 'none';
-        wrapper.style.padding = '10px 0';
-    }
+    if (source === 'list') { wrapper.style.boxShadow = 'none'; wrapper.style.padding = '10px 0'; wrapper.style.background = 'transparent'; wrapper.style.border = 'none'; }
 
     const textarea = document.createElement('textarea');
     textarea.className = 'edit-input';
     textarea.value = task.text;
     textarea.rows = Math.max(3, task.text.split('\n').length);
-    
     const hint = document.createElement('span');
     hint.className = 'edit-hint';
     hint.textContent = 'Enter — новая строка | Ctrl+Enter — сохранить';
-    
     wrapper.appendChild(textarea);
     wrapper.appendChild(hint);
     targetContainer.appendChild(wrapper);
@@ -246,53 +399,22 @@ function startEdit(boardId, status, index, source) {
 
     const saveEdit = () => {
         const newText = textarea.value.trim();
-        if (newText) {
-            task.text = newText;
-            saveData();
-        }
+        if (newText) { task.text = newText; saveData(); }
         renderApp();
     };
 
     textarea.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault();
-            saveEdit();
-        } else if (e.key === 'Escape') {
-            renderApp();
-        }
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveEdit(); }
+        else if (e.key === 'Escape') { renderApp(); }
     });
-
     textarea.addEventListener('blur', saveEdit);
     textarea.addEventListener('mousedown', (e) => e.stopPropagation());
 }
 
-// 5. Переключение видов
-function toggleListView() {
-    currentView = currentView === 'boards' ? 'list' : 'boards';
-    
-    const boardWrapper = document.getElementById('board-scroll-wrapper');
-    const listContainer = document.getElementById('list-view-container');
-    const btn = document.getElementById('list-toggle-btn');
-    const headerArea = document.getElementById('board-header-area');
+/* ==========================================================================
+   БЛОК 7: УПРАВЛЕНИЕ ДОСКАМИ
+   ========================================================================== */
 
-    if (currentView === 'list') {
-        boardWrapper.style.display = 'none';
-        headerArea.style.display = 'none';
-        listContainer.classList.add('active');
-        btn.classList.add('active');
-        btn.innerHTML = '📋 Вернуться к доске';
-        renderList();
-    } else {
-        boardWrapper.style.display = 'block';
-        headerArea.style.display = 'flex';
-        listContainer.classList.remove('active');
-        btn.classList.remove('active');
-        btn.innerHTML = '📋 Список задач';
-        renderApp();
-    }
-}
-
-// 6. Управление досками
 function switchBoard(boardId) {
     appData.activeBoardId = boardId;
     saveData();
@@ -304,11 +426,8 @@ function createNewBoard() {
     if (!name) return;
     const icon = prompt('Введите иконку (эмодзи):', '📋') || '📋';
     const id = 'board_' + Date.now();
-
     appData.boards.push({
-        id: id,
-        name: name,
-        icon: icon,
+        id: id, name: name, icon: icon,
         columns: [
             { id: 'todo_'+Date.now(), name: 'Сделать', bgColor: '#e0f0ff', accentColor: '#a3c8f0' },
             { id: 'progress_'+Date.now(), name: 'В процессе', bgColor: '#f0e2fc', accentColor: '#d0a3f0' },
@@ -316,7 +435,6 @@ function createNewBoard() {
         ],
         tasks: {}
     });
-
     appData.activeBoardId = id;
     saveData();
     if(currentView === 'list') toggleListView();
@@ -330,7 +448,6 @@ function editBoard(boardId) {
     if (newName === null) return;
     const newIcon = prompt('Изменить иконку (эмодзи):', board.icon);
     if (newIcon === null) return;
-
     board.name = newName.trim() || board.name;
     board.icon = newIcon.trim() || board.icon;
     saveData();
@@ -348,31 +465,25 @@ function deleteBoard(boardId) {
     }
 }
 
-// 7. Настройка колонок
+/* ==========================================================================
+   БЛОК 8: НАСТРОЙКИ КОЛОНОК
+   ========================================================================== */
+
 function openColumnsSettings() {
     const board = appData.boards.find(b => b.id === appData.activeBoardId);
     const list = document.getElementById('col-settings-list');
     list.innerHTML = '';
-
-    board.columns.forEach((col, index) => {
+    board.columns.forEach((col) => {
         const row = document.createElement('div');
         row.className = 'col-settings-row';
-        
         row.innerHTML = `
             <input type="text" value="${col.name}" onchange="updateColProp('${col.id}', 'name', this.value)" placeholder="Название">
-            <div style="display:flex; flex-direction:column; align-items:center;">
-                <span>Фон</span>
-                <input type="color" value="${col.bgColor}" onchange="updateColProp('${col.id}', 'bgColor', this.value)">
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center;">
-                <span>Полоска</span>
-                <input type="color" value="${col.accentColor}" onchange="updateColProp('${col.id}', 'accentColor', this.value)">
-            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;"><span>Фон</span><input type="color" value="${col.bgColor}" onchange="updateColProp('${col.id}', 'bgColor', this.value)"></div>
+            <div style="display:flex; flex-direction:column; align-items:center;"><span>Полоска</span><input type="color" value="${col.accentColor}" onchange="updateColProp('${col.id}', 'accentColor', this.value)"></div>
             <button class="remove-col-btn" onclick="removeColumn('${col.id}')" ${board.columns.length <= 1 ? 'disabled' : ''}>✕</button>
         `;
         list.appendChild(row);
     });
-
     document.getElementById('columns-modal').classList.add('active');
 }
 
@@ -399,14 +510,9 @@ function updateColProp(colId, prop, value) {
 
 function addNewColumn() {
     const board = appData.boards.find(b => b.id === appData.activeBoardId);
-    if (board.columns.length >= 8) return alert('Максимум 8 колонок для удобства.');
+    if (board.columns.length >= 8) return alert('Максимум 8 колонок.');
     const newId = 'col_' + Date.now();
-    board.columns.push({
-        id: newId,
-        name: 'Новая колонка',
-        bgColor: '#f0f0f0',
-        accentColor: '#cccccc'
-    });
+    board.columns.push({ id: newId, name: 'Новая колонка', bgColor: '#f0f0f0', accentColor: '#cccccc' });
     board.tasks[newId] = [];
     saveData();
     openColumnsSettings();
@@ -415,7 +521,6 @@ function addNewColumn() {
 function removeColumn(colId) {
     const board = appData.boards.find(b => b.id === appData.activeBoardId);
     if (board.columns.length <= 1) return;
-
     if (confirm('Удалить эту колонку вместе со всеми задачами?')) {
         board.columns = board.columns.filter(c => c.id !== colId);
         delete board.tasks[colId];
@@ -424,40 +529,10 @@ function removeColumn(colId) {
     }
 }
 
-// 8. Работа с задачами
-function addTask(boardId, status) {
-    const board = appData.boards.find(b => b.id === boardId);
-    if (!board) return;
-    const input = document.getElementById(`input-${boardId}-${status}`);
-    const text = input.value.trim();
-    
-    if (text) {
-        if (!board.tasks[status]) board.tasks[status] = [];
-        board.tasks[status].push({
-            id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
-            text: text
-        });
-        input.value = '';
-        saveData();
-        renderTasks(boardId);
-        if (currentView === 'list') renderList();
-    }
-}
+/* ==========================================================================
+   БЛОК 9: DRAG & DROP (Перетаскивание)
+   ========================================================================== */
 
-function deleteTask(boardId, status, index) {
-    if(confirm('Удалить эту задачу?')) {
-        const board = appData.boards.find(b => b.id === boardId);
-        board.tasks[status].splice(index, 1);
-        saveData();
-        if (currentView === 'list') {
-            renderList();
-        } else {
-            renderTasks(boardId);
-        }
-    }
-}
-
-// 9. Drag & Drop
 let draggedCardId = null;
 let draggedFromBoard = null;
 let draggedFromStatus = null;
@@ -468,7 +543,6 @@ function handleDragStart(e) {
     draggedCardId = card.dataset.id;
     draggedFromBoard = card.dataset.board;
     draggedFromStatus = card.dataset.status;
-    
     card.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
     setTimeout(() => card.style.display = 'none', 0);
@@ -492,22 +566,16 @@ function attachDragAndDrop() {
                 container.style.backgroundColor = 'rgba(0,0,0,0.05)';
             }
         });
-
         container.addEventListener('dragleave', () => { container.style.backgroundColor = 'transparent'; });
-
         container.addEventListener('drop', (e) => {
             e.preventDefault();
             container.style.backgroundColor = 'transparent';
-
             const parts = container.id.split('-');
             const dropStatus = parts.pop();
             const dropBoardId = parts.join('-');
-
             if (draggedFromBoard !== dropBoardId || draggedFromStatus === dropStatus) return;
-
             const board = appData.boards.find(b => b.id === draggedFromBoard);
             const taskIndex = board.tasks[draggedFromStatus].findIndex(t => t.id === draggedCardId);
-            
             if (taskIndex > -1) {
                 const [movedTask] = board.tasks[draggedFromStatus].splice(taskIndex, 1);
                 if (!board.tasks[dropStatus]) board.tasks[dropStatus] = [];
@@ -520,7 +588,10 @@ function attachDragAndDrop() {
     });
 }
 
-// 10. Вспомогательные
+/* ==========================================================================
+   БЛОК 10: УТИЛИТЫ
+   ========================================================================== */
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -528,7 +599,7 @@ function escapeHtml(text) {
 }
 
 function attachEnterListeners() {
-    document.querySelectorAll('textarea').forEach(textarea => {
+    document.querySelectorAll('.add-task-form textarea').forEach(textarea => {
         textarea.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -541,7 +612,10 @@ function attachEnterListeners() {
     });
 }
 
-// 11. ЭКСПОРТ / ИМПОРТ
+/* ==========================================================================
+   БЛОК 11: ЭКСПОРТ / ИМПОРТ
+   ========================================================================== */
+
 function exportData() {
     const dataStr = JSON.stringify(appData, null, 2);
     const blob = new Blob([dataStr], {type: "application/json"});
@@ -563,7 +637,6 @@ function importData(event) {
     reader.onload = function(e) {
         try {
             const rawData = JSON.parse(e.target.result);
-            
             if (rawData.boards && Array.isArray(rawData.boards)) {
                 rawData.boards.forEach(b => b.columns.forEach(c => delete c.width));
                 if(confirm('Загрузить данные? Все текущие доски будут заменены.')) {
@@ -572,44 +645,6 @@ function importData(event) {
                     if(currentView === 'list') toggleListView();
                     renderApp();
                     alert('Данные успешно загружены!');
-                }
-            } 
-            else if (rawData.work && rawData.home) {
-                if(confirm('Обнаружен файл СТАРОГО формата. Автоматически конвертировать его в новый вид?')) {
-                    const newAppData = {
-                        boards: [
-                            {
-                                id: 'work',
-                                name: 'РАБОЧИЕ ЗАДАЧИ',
-                                icon: '💼',
-                                columns: [
-                                    { id: 'todo', name: 'Сделать', bgColor: '#e0f0ff', accentColor: '#a3c8f0' },
-                                    { id: 'progress', name: 'В процессе', bgColor: '#f0e2fc', accentColor: '#d0a3f0' },
-                                    { id: 'review', name: 'На проверке', bgColor: '#fdf2e0', accentColor: '#f0d0a3' },
-                                    { id: 'done', name: 'Готово', bgColor: '#dff6e8', accentColor: '#a3f0c8' }
-                                ],
-                                tasks: rawData.work
-                            },
-                            {
-                                id: 'home',
-                                name: 'ДОМАШНИЕ ЗАДАЧИ',
-                                icon: '🏠',
-                                columns: [
-                                    { id: 'todo', name: 'Сделать', bgColor: '#e0f0ff', accentColor: '#a3c8f0' },
-                                    { id: 'progress', name: 'В процессе', bgColor: '#f0e2fc', accentColor: '#d0a3f0' },
-                                    { id: 'review', name: 'На проверке', bgColor: '#fdf2e0', accentColor: '#f0d0a3' },
-                                    { id: 'done', name: 'Готово', bgColor: '#dff6e8', accentColor: '#a3f0c8' }
-                                ],
-                                tasks: rawData.home
-                            }
-                        ],
-                        activeBoardId: 'work'
-                    };
-                    appData = newAppData;
-                    saveData();
-                    if(currentView === 'list') toggleListView();
-                    renderApp();
-                    alert('Старые данные успешно перенесены!');
                 }
             } else {
                 alert('Ошибка: неверный формат файла.');
@@ -623,5 +658,9 @@ function importData(event) {
     reader.readAsText(file);
 }
 
-// Запуск
+/* ==========================================================================
+   БЛОК 12: СТАРТ
+   ========================================================================== */
+
+initTheme();
 renderApp();

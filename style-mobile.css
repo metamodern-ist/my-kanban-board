@@ -1,0 +1,68 @@
+@media (max-width: 768px) {
+    body { align-items: flex-start; padding: 10px; }
+    .desktop-top-panel { display: none; }
+
+    .mobile-header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: var(--panel-bg); padding: 12px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid var(--border-color); }
+    .mobile-title { font-size: 16px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .burger-btn { background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
+    .burger-btn span { display: block; width: 26px; height: 3px; background-color: var(--text-main); border-radius: 2px; transition: 0.3s; }
+
+    .mobile-menu-overlay { display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--overlay-bg); backdrop-filter: blur(3px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+    .mobile-menu-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .mobile-menu-drawer { display: flex; flex-direction: column; position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh; background: var(--glass-bg); backdrop-filter: blur(20px); border-left: 1px solid var(--glass-border); z-index: 1001; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); padding: 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.1); overflow-y: auto; }
+    .mobile-menu-drawer.active { right: 0; }
+
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+    .drawer-header h2 { font-size: 22px; color: var(--text-main); font-weight: 700; }
+    .close-drawer-btn { background: none; border: none; font-size: 26px; color: var(--text-main); cursor: pointer; }
+    .drawer-section { margin-bottom: 25px; }
+    .drawer-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 700; margin-bottom: 12px; display: block; }
+
+    .drawer-boards-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .drawer-boards-list .tab-wrapper { width: 100%; }
+    .drawer-boards-list .switch-btn { background: rgba(0,0,0,0.03); width: 100%; padding: 14px 45px 14px 16px; border-radius: 12px; border: 1px solid transparent; text-align: left; justify-content: flex-start; white-space: normal; line-height: 1.3; font-size: 15px; font-weight: 600; }
+    body.dark-theme .drawer-boards-list .switch-btn { background: rgba(255,255,255,0.05); }
+    .drawer-boards-list .switch-btn.active { background: var(--text-main); color: white; box-shadow: 0 4px 10px rgba(26, 91, 156, 0.3); }
+    .drawer-boards-list .switch-btn.active + .tab-actions .tab-action-btn { color: white; }
+    .drawer-boards-list .tab-actions { opacity: 1; right: 12px; }
+
+    .drawer-btn-create { width: 100%; padding: 14px; background: transparent; color: var(--text-main); border: 1.5px dashed var(--text-main); border-radius: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .drawer-btn-create:hover { background: rgba(26, 91, 156, 0.05); }
+
+    .drawer-action-main { width: 100%; padding: 16px; background: var(--panel-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: background 0.2s; }
+    .drawer-action-main:hover { background: rgba(0,0,0,0.02); }
+
+    .drawer-actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .drawer-action-btn { padding: 12px 5px; background: transparent; color: var(--text-main); border: none; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: all 0.2s; }
+    .drawer-action-btn:hover { background: rgba(0,0,0,0.03); }
+    body.dark-theme .drawer-action-btn:hover { background: rgba(255,255,255,0.05); }
+    .drawer-action-btn .icon-emoji { font-size: 24px; line-height: 1; margin-bottom: 4px; }
+
+    .board-header-area { display: none !important; }
+    .list-header { display: none !important; }
+
+    .board-scroll-wrapper { width: calc(100% + 20px); margin-left: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .board-wrapper { min-width: max-content; }
+    .board { display: flex; flex-direction: row; width: max-content; background: transparent; box-shadow: none; gap: 12px; }
+    .column { width: 280px; flex-shrink: 0; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 500px; }
+    .column-header { padding: 12px; font-size: 15px; }
+    .tasks-container { padding: 10px; gap: 10px; }
+    .add-task-form { padding: 0 10px 10px 10px; }
+    .card { padding: 12px; border-radius: 8px; }
+    .card-text { font-size: 13px; padding-right: 0; }
+    .card-actions { opacity: 1; top: 8px; right: 8px; }
+    .modal-content { padding: 15px; width: 95%; }
+    .col-settings-row { flex-wrap: wrap; }
+    .col-settings-row input[type="text"] { min-width: 100%; margin-bottom: 5px; }
+    .tasks-table th, .tasks-table td { padding: 10px 8px; font-size: 13px; }
+    .list-actions { flex-direction: column; }
+    
+    .list-view-container { border-radius: 0; border: none; box-shadow: none; background: transparent; }
+    .tasks-table { background: var(--panel-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+}
+
+body.dark-theme .column[data-col-id*="todo"], body.dark-theme .column[style*="e0f0ff"] { background-color: #172433 !important; }
+body.dark-theme .column[data-col-id*="progress"], body.dark-theme .column[style*="f0e2fc"] { background-color: #251c30 !important; }
+body.dark-theme .column[data-col-id*="review"], body.dark-theme .column[style*="fdf2e0"] { background-color: #2d2519 !important; }
+body.dark-theme .column[data-col-id*="done"], body.dark-theme .column[style*="dff6e8"] { background-color: #172b21 !important; }

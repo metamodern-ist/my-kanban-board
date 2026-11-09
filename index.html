@@ -5,39 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Моя Канбан-доска</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-base.css">
+    <link rel="stylesheet" href="style-mobile.css">
 </head>
 <body>
 
-    <div class="top-panel">
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <!-- ПАНЕЛЬ ДЛЯ ПК -->
+    <div class="desktop-top-panel">
+        <div class="board-switcher-wrapper">
             <div class="board-switcher" id="board-switcher">
                 <button class="add-board-btn" onclick="createNewBoard()" title="Создать новую доску">+</button>
             </div>
-            <button class="list-view-btn" id="list-toggle-btn" onclick="toggleListView()">
-                📋 Список задач
-            </button>
         </div>
         
-        <div class="io-buttons">
-            <button class="io-btn" onclick="exportData()" title="Сохранить все доски в файл">📥 Скачать</button>
-            <button class="io-btn" onclick="document.getElementById('import-file').click()" title="Загрузить доски из файла">📤 Загрузить</button>
+        <!-- НОВОЕ ВЫПАДАЮЩЕЕ МЕНЮ -->
+        <div class="desktop-menu-container">
+            <button class="desktop-menu-btn" id="desktop-menu-btn" onclick="toggleDesktopMenu()">
+                ☰ Действия
+            </button>
+            <div class="desktop-dropdown" id="desktop-dropdown">
+                <button class="dropdown-item" id="list-toggle-btn" onclick="toggleListView(); toggleDesktopMenu();">
+                    <span class="icon">📋</span> Список задач
+                </button>
+                <button class="dropdown-item" onclick="exportData(); toggleDesktopMenu();">
+                    <span class="icon">📥</span> Скачать
+                </button>
+                <button class="dropdown-item" onclick="document.getElementById('import-file').click(); toggleDesktopMenu();">
+                    <span class="icon">📤</span> Загрузить
+                </button>
+                <button class="dropdown-item" onclick="toggleTheme()">
+                    <span class="icon" id="desktop-theme-icon">🌙</span> <span id="desktop-theme-text">Тёмная тема</span>
+                </button>
+            </div>
             <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
         </div>
     </div>
 
-    <!-- Заголовок для режима Досок -->
-    <div class="board-header-area" id="board-header-area">
-        <div class="board-title" id="board-title-text">ЗАГРУЗКА...</div>
-        <button class="settings-btn" onclick="openColumnsSettings()">⚙️ Настроить колонки</button>
+    <!-- ... (ОСТАЛЬНОЙ HTML КОД ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ) ... -->
+    <!-- ШАПКА ДЛЯ МОБИЛОК -->
+    <div class="mobile-header">
+        <div class="mobile-title">
+            <span id="mobile-board-icon">💼</span> <span id="mobile-board-name">РАБОЧИЕ ЗАДАЧИ</span>
+        </div>
+        <button class="burger-btn" id="burger-btn" onclick="toggleMobileMenu()">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 
-    <!-- Контейнер для Досок -->
+    <!-- МОБИЛЬНОЕ МЕНЮ -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu-drawer" id="mobile-menu-drawer">
+        <div class="drawer-header">
+            <h2>Меню</h2>
+            <button class="close-drawer-btn" onclick="toggleMobileMenu()">✕</button>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <span class="drawer-label">Мои доски</span>
+                <div class="drawer-boards-list" id="drawer-boards-list"></div>
+                <button class="drawer-btn-create" onclick="createNewBoard(); toggleMobileMenu();">+ Создать доску</button>
+            </div>
+            <div class="drawer-section">
+                <span class="drawer-label">Действия</span>
+                <button class="drawer-action-main" id="mobile-list-toggle-btn" onclick="toggleListView(); toggleMobileMenu();">📋 Список задач</button>
+                <div class="drawer-actions-grid">
+                    <button class="drawer-action-btn" onclick="exportData(); toggleMobileMenu();"><span class="icon-emoji">📥</span> Скачать</button>
+                    <button class="drawer-action-btn" onclick="document.getElementById('import-file').click(); toggleMobileMenu();"><span class="icon-emoji">📤</span> Загрузить</button>
+                    <button class="drawer-action-btn" onclick="toggleTheme()" id="theme-btn-mobile"><span class="icon-emoji">🌙</span> Тема</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ЗАГОЛОВОК И НАСТРОЙКИ -->
+    <div class="board-header-area" id="board-header-area">
+        <div class="board-title" id="board-title-text">ЗАГРУЗКА...</div>
+        <button class="settings-btn" onclick="openColumnsSettings()">
+            ⚙️ <span class="settings-text">Настроить колонки</span>
+        </button>
+    </div>
+
+    <!-- САМИ ДОСКИ -->
     <div class="board-scroll-wrapper" id="board-scroll-wrapper">
         <div id="boards-container"></div>
     </div>
 
-    <!-- Контейнер для Списка задач -->
+    <!-- РЕЖИМ СПИСКА -->
     <div class="list-view-container" id="list-view-container">
         <div class="list-header" id="list-header-title"></div>
         <table class="tasks-table">
@@ -52,7 +105,7 @@
         </table>
     </div>
 
-    <!-- Модальное окно настроек колонок -->
+    <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="modal-overlay" id="columns-modal">
         <div class="modal-content">
             <div class="modal-header">
