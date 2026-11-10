@@ -14,34 +14,46 @@
     <div class="desktop-top-panel">
         <div class="board-switcher-wrapper">
             <div class="board-switcher" id="board-switcher">
-                <button class="add-board-btn" onclick="createNewBoard()" title="Создать новую доску">+</button>
+                <button class="add-board-btn" onclick="createNewBoard()" title="Создать новую доску">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
             </div>
         </div>
         
-        <!-- НОВОЕ ВЫПАДАЮЩЕЕ МЕНЮ -->
         <div class="desktop-menu-container">
             <button class="desktop-menu-btn" id="desktop-menu-btn" onclick="toggleDesktopMenu()">
-                ☰ Действия
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                Действия
             </button>
             <div class="desktop-dropdown" id="desktop-dropdown">
                 <button class="dropdown-item" id="list-toggle-btn" onclick="toggleListView(); toggleDesktopMenu();">
-                    <span class="icon">📋</span> Список задач
+                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Список задач
                 </button>
                 <button class="dropdown-item" onclick="exportData(); toggleDesktopMenu();">
-                    <span class="icon">📥</span> Скачать
+                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Скачать
                 </button>
                 <button class="dropdown-item" onclick="document.getElementById('import-file').click(); toggleDesktopMenu();">
-                    <span class="icon">📤</span> Загрузить
+                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Загрузить
                 </button>
+                <button class="dropdown-item" onclick="openColumnsSettings(); toggleDesktopMenu();">
+                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Настроить статусы
+                </button>
+                <div class="dropdown-divider"></div>
                 <button class="dropdown-item" onclick="toggleTheme()">
-                    <span class="icon" id="desktop-theme-icon">🌙</span> <span id="desktop-theme-text">Тёмная тема</span>
+                    <span id="desktop-theme-icon" style="display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </span> 
+                    <span id="desktop-theme-text">Тёмная тема</span>
                 </button>
             </div>
             <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
         </div>
     </div>
 
-    <!-- ... (ОСТАЛЬНОЙ HTML КОД ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ) ... -->
     <!-- ШАПКА ДЛЯ МОБИЛОК -->
     <div class="mobile-header">
         <div class="mobile-title">
@@ -63,36 +75,55 @@
             <div class="drawer-section">
                 <span class="drawer-label">Мои доски</span>
                 <div class="drawer-boards-list" id="drawer-boards-list"></div>
-                <button class="drawer-btn-create" onclick="createNewBoard(); toggleMobileMenu();">+ Создать доску</button>
+                <button class="drawer-btn-create" onclick="createNewBoard(); toggleMobileMenu();">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Создать доску
+                </button>
             </div>
             <div class="drawer-section">
                 <span class="drawer-label">Действия</span>
-                <button class="drawer-action-main" id="mobile-list-toggle-btn" onclick="toggleListView(); toggleMobileMenu();">📋 Список задач</button>
+                <button class="drawer-action-main" id="mobile-list-toggle-btn" onclick="toggleListView(); toggleMobileMenu();">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Список задач
+                </button>
+                
+                <button class="drawer-action-main" onclick="openColumnsSettings(); toggleMobileMenu();">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Настроить статусы
+                </button>
+
                 <div class="drawer-actions-grid">
-                    <button class="drawer-action-btn" onclick="exportData(); toggleMobileMenu();"><span class="icon-emoji">📥</span> Скачать</button>
-                    <button class="drawer-action-btn" onclick="document.getElementById('import-file').click(); toggleMobileMenu();"><span class="icon-emoji">📤</span> Загрузить</button>
-                    <button class="drawer-action-btn" onclick="toggleTheme()" id="theme-btn-mobile"><span class="icon-emoji">🌙</span> Тема</button>
+                    <button class="drawer-action-btn" onclick="exportData(); toggleMobileMenu();">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Скачать
+                    </button>
+                    <button class="drawer-action-btn" onclick="document.getElementById('import-file').click(); toggleMobileMenu();">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Загрузить
+                    </button>
+                    <button class="drawer-action-btn" onclick="toggleTheme()" id="theme-btn-mobile">
+                        <span id="mobile-theme-icon" style="display: flex; align-items: center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </span>
+                        Тема
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ЗАГОЛОВОК И НАСТРОЙКИ -->
+    <!-- ЗАГОЛОВОК ДОСКИ (МИНИМАЛИСТИЧНЫЙ) -->
     <div class="board-header-area" id="board-header-area">
         <div class="board-title" id="board-title-text">ЗАГРУЗКА...</div>
-        <button class="settings-btn" onclick="openColumnsSettings()">
-            ⚙️ <span class="settings-text">Настроить колонки</span>
-        </button>
     </div>
 
-    <!-- САМИ ДОСКИ -->
+    <!-- ДОСКИ -->
     <div class="board-scroll-wrapper" id="board-scroll-wrapper">
         <div id="boards-container"></div>
     </div>
 
     <!-- РЕЖИМ СПИСКА -->
     <div class="list-view-container" id="list-view-container">
-        <div class="list-header" id="list-header-title"></div>
         <table class="tasks-table">
             <thead>
                 <tr>
@@ -102,18 +133,40 @@
                 </tr>
             </thead>
             <tbody id="list-view-tbody"></tbody>
+            <tbody class="list-add-tbody">
+                <tr class="list-add-row">
+                    <td class="list-add-status-cell"></td>
+                    <td>
+                        <input type="text" id="list-new-task-text" class="list-add-input" placeholder="Новая задача..." onkeydown="if(event.key === 'Enter') addTaskFromList()">
+                    </td>
+                    <td>
+                        <button class="list-add-btn" onclick="addTaskFromList()">Добавить</button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО -->
+    <!-- МОДАЛЬНОЕ ОКНО НАСТРОЕК СТАТУСОВ -->
     <div class="modal-overlay" id="columns-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Настройка колонок</h2>
+                <h2>Настройка статусов</h2>
                 <button class="close-modal" onclick="closeColumnsSettings()">×</button>
             </div>
             <div id="col-settings-list"></div>
-            <button class="add-col-btn" onclick="addNewColumn()">+ Добавить колонку</button>
+            <button class="add-col-btn" onclick="addNewColumn()">+ Добавить статус</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВЫБОРА ИКОНКИ -->
+    <div class="modal-overlay" id="icon-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Иконка доски</h2>
+                <button class="close-modal" onclick="closeIconSettings()">×</button>
+            </div>
+            <div class="icon-picker-grid" id="icon-picker-grid"></div>
         </div>
     </div>
 

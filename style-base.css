@@ -8,18 +8,20 @@ body.dark-theme {
     --card-shadow: 0 4px 10px rgba(0,0,0,0.4); --panel-bg: #1e2229; --border-color: rgba(255,255,255,0.08);
     --glass-bg: rgba(30, 34, 41, 0.85); --glass-border: rgba(255, 255, 255, 0.05); --overlay-bg: rgba(0, 0, 0, 0.6);
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
 body { background-color: var(--bg-color); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px 15px; overflow-x: hidden; color: var(--text-dark); }
+
+svg { flex-shrink: 0; }
+.desktop-menu-btn, .dropdown-item, .io-btn, .settings-btn, .drawer-action-main, .drawer-action-btn, .drawer-btn-create, .switch-btn { display: flex; align-items: center; gap: 8px; }
 
 /* 1. ВЕРХНЯЯ ПАНЕЛЬ (ДЕСКТОП) */
 .desktop-top-panel { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; max-width: 1600px; margin-bottom: 20px; gap: 15px; flex-wrap: wrap; flex-shrink: 0; }
 .mobile-header, .mobile-menu-overlay, .mobile-menu-drawer { display: none; }
-
-/* Вкладки досок */
 .board-switcher-wrapper { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
 .board-switcher { display: flex; gap: 10px; background: var(--panel-bg); padding: 6px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; align-items: center; }
 .tab-wrapper { position: relative; display: flex; align-items: center; }
-.switch-btn { padding: 10px 65px 10px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; background: transparent; color: #888; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.switch-btn { padding: 10px 65px 10px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; background: transparent; color: #888; transition: all 0.3s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .switch-btn:hover { background: rgba(0,0,0,0.05); color: var(--text-main); }
 body.dark-theme .switch-btn:hover { background: rgba(255,255,255,0.05); }
 .switch-btn.active { background: var(--text-main); color: white; box-shadow: 0 4px 10px rgba(26, 91, 156, 0.3); }
@@ -29,63 +31,28 @@ body.dark-theme .switch-btn:hover { background: rgba(255,255,255,0.05); }
 .switch-btn.active + .tab-actions .tab-action-btn { color: rgba(255,255,255,0.7); }
 .tab-action-btn:hover { background: rgba(0,0,0,0.1); color: #333 !important; }
 body.dark-theme .tab-action-btn:hover { background: rgba(255,255,255,0.1); color: white !important; }
-.add-board-btn { background: rgba(0,0,0,0.03); color: var(--text-main); border: 1px dashed var(--text-main); padding: 8px 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+.add-board-btn { background: rgba(0,0,0,0.03); color: var(--text-main); border: 1px dashed var(--text-main); padding: 8px 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.2s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 body.dark-theme .add-board-btn { background: rgba(255,255,255,0.05); }
 .add-board-btn:hover { opacity: 0.8; }
 
-/* ========================================= */
-/* НОВОЕ ВЫПАДАЮЩЕЕ МЕНЮ ДЛЯ ДЕСКТОПА        */
-/* ========================================= */
+/* 2. МЕНЮ */
 .desktop-menu-container { position: relative; }
-.desktop-menu-btn { 
-    display: flex; align-items: center; gap: 8px; 
-    background: var(--panel-bg); color: var(--text-main); 
-    border: 1px solid var(--border-color); padding: 10px 20px; 
-    border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.2s;
-}
+.desktop-menu-btn { background: var(--panel-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.2s; }
 .desktop-menu-btn:hover { opacity: 0.8; }
 .desktop-menu-btn.active { background: var(--text-main); color: white; border-color: var(--text-main); }
-
-.desktop-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    padding: 8px;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    z-index: 100;
-}
+.desktop-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 8px; min-width: 200px; display: flex; flex-direction: column; gap: 4px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; z-index: 100; }
 .desktop-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-.dropdown-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 15px; border: none; background: transparent;
-    color: var(--text-dark); font-size: 14px; font-weight: 500;
-    border-radius: 8px; cursor: pointer; text-align: left;
-    transition: background 0.2s;
-}
+.dropdown-item { padding: 10px 15px; border: none; background: transparent; color: var(--text-dark); font-size: 14px; font-weight: 500; border-radius: 8px; cursor: pointer; text-align: left; transition: background 0.2s; width: 100%; }
 .dropdown-item:hover { background: rgba(0,0,0,0.05); color: var(--text-main); }
 body.dark-theme .dropdown-item:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
-.dropdown-item .icon { font-size: 18px; }
+.dropdown-item .icon { color: #888; }
+body.dark-theme .dropdown-item .icon { color: #aaa; }
+.dropdown-divider { height: 1px; background: var(--border-color); margin: 5px 0; }
 
-/* 2. ЗАГОЛОВОК ДОСКИ И НАСТРОЙКИ */
-.board-header-area { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; flex-shrink: 0; flex-wrap: wrap; justify-content: center; }
-.board-title { background: var(--panel-bg); color: var(--text-main); padding: 12px 40px; border-radius: 8px; font-size: 20px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); letter-spacing: 1px; text-align: center; text-transform: uppercase; }
-.settings-btn { background: var(--panel-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); white-space: nowrap; display: flex; align-items: center; gap: 5px; }
-.settings-btn:hover { opacity: 0.8; }
+/* 3. ЗАГОЛОВОК И ДОСКА */
+.board-header-area { display: flex; align-items: center; justify-content: flex-start; width: 100%; max-width: 1600px; margin-bottom: 10px; padding-left: 15px; flex-shrink: 0; }
+.board-title { background: transparent; color: var(--text-main); padding: 0; font-size: 14px; font-weight: 600; box-shadow: none; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.7; }
 
-/* 3. ДОСКА И КАРТОЧКИ */
 .board-scroll-wrapper { width: 100%; max-width: 1600px; overflow-x: auto; padding-bottom: 15px; }
 .board-scroll-wrapper::-webkit-scrollbar { height: 8px; }
 .board-scroll-wrapper::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 4px; }
@@ -96,7 +63,50 @@ body.dark-theme .dropdown-item:hover { background: rgba(255,255,255,0.05); color
 @media (max-width: 1200px) { .board { width: max-content; min-width: 100%; } }
 .column { display: flex; flex-direction: column; min-height: 600px; border-right: 1px solid var(--border-color); transition: background-color 0.3s; }
 .column:last-child { border-right: none; }
-.column-header { padding: 20px 15px; text-align: center; font-size: 18px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid var(--border-color); word-wrap: break-word; }
+
+/* ОБНОВЛЕННЫЙ ЗАГОЛОВОК КОЛОНКИ С ШЕСТЕРЕНКОЙ */
+.column-header { 
+    padding: 20px 15px; 
+    text-align: center; 
+    font-size: 18px; 
+    font-weight: 600; 
+    color: var(--text-main); 
+    border-bottom: 1px solid var(--border-color); 
+    word-wrap: break-word;
+    position: relative; /* Для позиционирования шестеренки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.col-settings-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+    opacity: 0; /* Скрыта по умолчанию */
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 4px;
+}
+.col-settings-icon:hover {
+    background: rgba(0,0,0,0.05);
+    transform: translateY(-50%) scale(1.1);
+}
+body.dark-theme .col-settings-icon:hover {
+    background: rgba(255,255,255,0.1);
+}
+.column:hover .col-settings-icon {
+    opacity: 1; /* Показываем при наведении на колонку */
+}
+
 .tasks-container { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 15px; min-height: 200px; }
 .card { background: var(--panel-bg); border-radius: 8px; padding: 15px; box-shadow: var(--card-shadow); cursor: grab; position: relative; transition: transform 0.1s ease, box-shadow 0.1s ease; display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.3s ease; border: 1px solid var(--border-color); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -121,35 +131,94 @@ body.dark-theme .action-btn:hover { background: rgba(255,255,255,0.1); }
 .add-btn { background: transparent; color: var(--text-main); border: 1px solid var(--text-main); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
 .add-btn:hover { background: var(--text-main); color: white; }
 
-/* 4. МОДАЛЬНОЕ ОКНО */
-.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+/* 4. МОДАЛЬНЫЕ ОКНА */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
-.modal-content { background: var(--panel-bg); color: var(--text-dark); padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.modal-content { background: var(--panel-bg); color: var(--text-dark); padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
 .modal-header h2 { font-size: 20px; color: var(--text-main); }
 .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
-.col-settings-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
-.col-settings-row input[type="text"] { flex: 1; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none; background: var(--panel-bg); color: var(--text-dark); }
-.col-settings-row input[type="color"] { width: 40px; height: 35px; padding: 0; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--panel-bg); }
-.col-settings-row span { font-size: 12px; color: #888; margin-bottom: 2px; display: block; }
-.remove-col-btn { background: #ffe0e0; color: #d00; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.remove-col-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.add-col-btn { background: var(--text-main); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 10px; }
+.close-modal:hover { color: #ff6b6b; }
+
+#col-settings-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+#col-settings-list::-webkit-scrollbar { width: 6px; }
+#col-settings-list::-webkit-scrollbar-track { background: transparent; }
+#col-settings-list::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
+
+.col-settings-row { position: relative; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--bg-color); padding: 15px; padding-top: 40px; border-radius: 8px; border: 1px solid var(--border-color); transition: background-color 0.3s; }
+.col-settings-row input[type="text"] { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: var(--panel-bg); color: var(--text-dark); font-size: 14px; }
+
+.color-palette { display: flex; gap: 8px; flex-wrap: wrap; }
+.color-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+body.light-theme .color-swatch { box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+body.dark-theme .color-swatch { filter: brightness(0.6) saturate(1.5); }
+body.dark-theme .color-swatch:hover { filter: brightness(0.8) saturate(1.5); transform: scale(1.1); }
+.color-swatch.selected { border-color: var(--text-main); box-shadow: 0 0 0 2px var(--panel-bg) inset; }
+
+.remove-col-btn { position: absolute; top: 10px; right: 10px; background: transparent; color: #aaa; border: none; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer; font-size: 18px; font-weight: bold; transition: all 0.2s; }
+.remove-col-btn:hover { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; }
+.remove-col-btn:disabled { opacity: 0.3; cursor: not-allowed; background: transparent; color: #aaa; }
+
+.add-col-btn { background: var(--text-main); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px; flex-shrink: 0; }
 .add-col-btn:hover { opacity: 0.9; }
 
-/* 5. РЕЖИМ СПИСКА */
+/* 5. ВЫБОР ИКОНКИ */
+.tab-icon-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; margin-right: 4px; }
+.tab-icon-btn:hover { transform: scale(1.2); }
+.tab-icon-btn svg { width: 18px; height: 18px; color: var(--text-main); }
+.switch-btn.active .tab-icon-btn svg { color: white; }
+
+.icon-picker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px; background: var(--bg-color); border-radius: 8px; }
+.icon-picker-item { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.icon-picker-item:hover { border-color: var(--text-main); background: rgba(26, 91, 156, 0.05); }
+.icon-picker-item.selected { border-color: var(--text-main); background: rgba(26, 91, 156, 0.1); box-shadow: 0 0 0 2px var(--text-main); }
+.icon-picker-item svg { width: 24px; height: 24px; color: var(--text-dark); }
+
+/* 6. РЕЖИМ СПИСКА */
 .list-view-container { display: none; width: 100%; max-width: 1600px; background: var(--panel-bg); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--border-color); }
 .list-view-container.active { display: block; }
-.list-header { padding: 20px; background: var(--bg-color); border-bottom: 2px solid var(--border-color); color: var(--text-main); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.list-header { display: none; } /* Убрали заголовок */
+
+/* Форма добавления задачи встроена в таблицу */
+.list-add-tbody { background: var(--bg-color); }
+.list-add-row td { padding: 10px 15px; border-bottom: 2px solid var(--border-color); }
+.list-add-status-cell { font-size: 12px; font-weight: 600; color: var(--text-main); white-space: nowrap; background-color: transparent !important; border: none !important; padding-left: 15px !important; }
+.list-add-input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--panel-bg); color: var(--text-dark); font-size: 14px; outline: none; font-family: inherit; }
+.list-add-input:focus { box-shadow: 0 0 0 2px rgba(26, 91, 156, 0.3); }
+.list-add-btn { background: var(--text-main); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; white-space: nowrap; transition: all 0.2s; width: 100%; }
+.list-add-btn:hover { opacity: 0.9; }
+
 .tasks-table { width: 100%; border-collapse: collapse; text-align: left; }
 .tasks-table th { background: var(--bg-color); color: #888; font-weight: 600; padding: 15px; border-bottom: 1px solid var(--border-color); white-space: nowrap; font-size: 14px; }
 .tasks-table td { padding: 15px; border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 14px; color: var(--text-dark); }
 .tasks-table tr:hover { background-color: rgba(0,0,0,0.02); }
 body.dark-theme .tasks-table tr:hover { background-color: rgba(255,255,255,0.02); }
-.badge-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-body.dark-theme .badge-status { background-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-main) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+
+/* Бейдж статуса */
+.badge-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: transform 0.2s; }
+.badge-status:hover { transform: scale(1.05); }
+
 .list-task-text { cursor: default; padding: 0; white-space: pre-wrap; text-align: left; line-height: 1.5; color: var(--text-dark); width: 100%; }
 .list-actions { display: flex; gap: 5px; justify-content: flex-end; }
 .list-action-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 5px; border-radius: 4px; }
 .list-action-btn:hover { background: rgba(0,0,0,0.05); }
 body.dark-theme .list-action-btn:hover { background: rgba(255,255,255,0.1); }
+
+/* 7. ВЫПАДАЮЩЕЕ МЕНЮ СТАТУСА */
+.status-dropdown { position: absolute; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); padding: 5px; z-index: 1000; display: flex; flex-direction: column; gap: 4px; min-width: 120px; animation: fadeIn 0.15s ease; }
+.status-dropdown-item { padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; transition: background 0.2s; text-align: left; }
+.status-dropdown-item:hover { background: rgba(0,0,0,0.05); }
+body.dark-theme .status-dropdown-item:hover { background: rgba(255,255,255,0.1); }
+
+/* 8. ТЕМНАЯ ТЕМА КОЛОНОК И TOUCH */
+body.dark-theme .column[data-color="blue"] { background-color: #172433 !important; }
+body.dark-theme .column[data-color="purple"] { background-color: #251c30 !important; }
+body.dark-theme .column[data-color="yellow"] { background-color: #2d2519 !important; }
+body.dark-theme .column[data-color="green"] { background-color: #172b21 !important; }
+body.dark-theme .column[data-color="red"] { background-color: #301a1c !important; }
+body.dark-theme .column[data-color="orange"] { background-color: #2e2016 !important; }
+body.dark-theme .column[data-color="teal"] { background-color: #142b2b !important; }
+body.dark-theme .column[data-color="pink"] { background-color: #2e1a26 !important; }
+
+.card { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+.touch-drag-clone { position: fixed; z-index: 9999; pointer-events: none; opacity: 0.9; transform: scale(1.05) rotate(2deg); box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important; transition: transform 0.1s ease; }

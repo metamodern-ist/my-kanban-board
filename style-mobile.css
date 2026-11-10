@@ -37,7 +37,6 @@
     .drawer-action-btn { padding: 12px 5px; background: transparent; color: var(--text-main); border: none; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: all 0.2s; }
     .drawer-action-btn:hover { background: rgba(0,0,0,0.03); }
     body.dark-theme .drawer-action-btn:hover { background: rgba(255,255,255,0.05); }
-    .drawer-action-btn .icon-emoji { font-size: 24px; line-height: 1; margin-bottom: 4px; }
 
     .board-header-area { display: none !important; }
     .list-header { display: none !important; }
@@ -60,9 +59,7 @@
     
     .list-view-container { border-radius: 0; border: none; box-shadow: none; background: transparent; }
     .tasks-table { background: var(--panel-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    
+    .list-add-task-form { flex-direction: column; padding: 10px 15px; }
+    .list-add-task-form textarea { min-height: 60px; }
 }
-
-body.dark-theme .column[data-col-id*="todo"], body.dark-theme .column[style*="e0f0ff"] { background-color: #172433 !important; }
-body.dark-theme .column[data-col-id*="progress"], body.dark-theme .column[style*="f0e2fc"] { background-color: #251c30 !important; }
-body.dark-theme .column[data-col-id*="review"], body.dark-theme .column[style*="fdf2e0"] { background-color: #2d2519 !important; }
-body.dark-theme .column[data-col-id*="done"], body.dark-theme .column[style*="dff6e8"] { background-color: #172b21 !important; }
